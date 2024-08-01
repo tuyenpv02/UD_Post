@@ -151,7 +151,7 @@ const SendSol = ({ totalPoint,viewPublicKey }) => {
                     <Col span={24}>
                         <div className="d-flex justify-content-end mt-2">
                             <Button onClick={sendSol} type="primary">
-                                Đổi sol
+                                Gửi
                             </Button>
                         </div>
                     </Col>
