@@ -54,10 +54,10 @@ const SendSol = ({ totalPoint,viewPublicKey }) => {
                 const connection = new Connection(network);
 
                 const provider = getProvider(); // see "Detecting the Provider"
-
-                const transaction = Transaction.from(
-                    Buffer.from(result.result.encoded_transaction, "base64")
-                );
+                const transaction = toTransaction(result.result.encoded_transaction);
+                // const transaction = Transaction.from(
+                //     Buffer.from(result.result.encoded_transaction, "base64")
+                // );
                 const { signature } = await provider.signAndSendTransaction(transaction);
                 await connection.getSignatureStatus(signature);
 

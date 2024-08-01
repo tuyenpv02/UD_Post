@@ -109,132 +109,63 @@ const CreateNFT = () => {
             .catch((error) => console.log("error", error));
     };
 
-    // const handleCreateMetadata = () => {
-    //     var myHeaders = new Headers();
-    //     myHeaders.append("x-api-key", "BMEGXzNX8HL-0T59");
-    //     myHeaders.append("Content-Type", "application/json");
+    const handleCreateMetadata = () => {
+        var myHeaders = new Headers();
+        myHeaders.append("x-api-key", "BMEGXzNX8HL-0T59");
+        myHeaders.append("Content-Type", "application/json");
 
-    //     var raw = JSON.stringify({
-    //         network: "devnet",
-    //         metadata_uri:
-    //             "https://brown-loyal-stoat-734.mypinata.cloud/ipfs/QmR5Tyx3MvpiCKtjTVC4wVzRigpujCv9bnvQKU4ZMQzN5N",
+        var raw = JSON.stringify({
+            network: "devnet",
+            metadata_uri:
+                "https://brown-loyal-stoat-734.mypinata.cloud/ipfs/QmR5Tyx3MvpiCKtjTVC4wVzRigpujCv9bnvQKU4ZMQzN5N",
 
-    //         max_supply: 0,
-    //         collection_address: "3F3G122hfRQ6E7aRQLhdXvabxtfhGHF89UVLvHR4pmn9",
-    //         receiver: publickey,
-    //         fee_payer: "2fmz8SuNVyxEP6QwKQs6LNaT2ATszySPEJdhUDesxktc",
-    //         service_charge: {
-    //             receiver: "BFefyp7jNF5Xq2A4JDLLFFGpxLq5oPEFKBAQ46KJHW2R",
-    //             amount: 0.01,
-    //         },
-    //         priority_fee: 100,
-    //     });
+            max_supply: 0,
+            collection_address: "3F3G122hfRQ6E7aRQLhdXvabxtfhGHF89UVLvHR4pmn9",
+            receiver: publickey,
+            fee_payer: "2fmz8SuNVyxEP6QwKQs6LNaT2ATszySPEJdhUDesxktc",
+            service_charge: {
+                receiver: "BFefyp7jNF5Xq2A4JDLLFFGpxLq5oPEFKBAQ46KJHW2R",
+                amount: 0.01,
+            },
+            priority_fee: 100,
+        });
 
-    //     var requestOptions = {
-    //         method: "POST",
-    //         headers: myHeaders,
-    //         body: raw,
-    //         redirect: "follow",
-    //     };
+        var requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow",
+        };
 
-    //     fetch("https://api.shyft.to/sol/v1/nft/create_from_metadata", requestOptions)
-    //         .then((response) => response.json())
-    //         .then(async (result) => {
-    //             const network = "https://api.devnet.solana.com";
-    //             const connection = new Connection(network);
+        fetch("https://api.shyft.to/sol/v1/nft/create_from_metadata", requestOptions)
+            .then((response) => response.json())
+            .then(async (result) => {
+                const network = "https://api.devnet.solana.com";
+                const connection = new Connection(network);
 
-    //             // Deserialize the transaction
-    //             const transaction = toTransaction(result.result.encoded_transaction);
-    //             // const transaction = Transaction.from(Buffer.from(encodedTransaction, "base64"));
+                // Deserialize the transaction
+                const transaction = toTransaction(result.result.encoded_transaction);
+                // const transaction = Transaction.from(Buffer.from(encodedTransaction, "base64"));
 
-    //             // Sign and send the transaction
-    //             const signedTransaction = await window.phantom.solana.signTransaction(transaction);
-    //             const signature = await connection.sendRawTransaction(
-    //                 signedTransaction.serialize()
-    //             );
+                // Sign and send the transaction
+                const signedTransaction = await window.phantom.solana.signTransaction(transaction);
+                const signature = await connection.sendRawTransaction(
+                    signedTransaction.serialize()
+                );
 
-    //             // Confirm the transaction
-    //             await connection.confirmTransaction(signature);
+                // Confirm the transaction
+                await connection.confirmTransaction(signature);
 
-    //             console.log("Transaction successful with signature:", signature);
-    //         })
-    //         .catch((error) => console.log("error", error));
-    // };
+                console.log("Transaction successful with signature:", signature);
+            })
+            .catch((error) => console.log("error", error));
+    };
 
-    // const toTransaction = (endcodeTransaction) =>
-    //     Transaction.from(Uint8Array.from(atob(endcodeTransaction), (c) => c.charCodeAt(0)));
+    const toTransaction = (endcodeTransaction) =>
+        Transaction.from(Uint8Array.from(atob(endcodeTransaction), (c) => c.charCodeAt(0)));
 
     // Kiểm tra và sử dụng Buffer
     const Buffer = globalThis.Buffer;
-
-    const handleCreateMetadata = async () => {
-        try {
-            const myHeaders = new Headers();
-            myHeaders.append("x-api-key", "BMEGXzNX8HL-0T59");
-            myHeaders.append("Content-Type", "application/json");
-
-            const raw = JSON.stringify({
-                network: "devnet",
-                metadata_uri:
-                    "https://brown-loyal-stoat-734.mypinata.cloud/ipfs/QmR5Tyx3MvpiCKtjTVC4wVzRigpujCv9bnvQKU4ZMQzN5N",
-                receiver: "6TdrBtkcdexB22bNytCgde67zx9cnVBoTze4MsZogkaZ",
-                max_supply: 0,
-                service_charge: {
-                    receiver: "6TdrBtkcdexB22bNytCgde67zx9cnVBoTze4MsZogkaZ",
-                    amount: 0.01,
-                },
-                // priority_fee: 100,
-            });
-
-            const requestOptions = {
-                method: "POST",
-                headers: myHeaders,
-                body: raw,
-                redirect: "follow",
-            };
-
-            const response = await fetch(
-                "https://api.shyft.to/sol/v1/nft/create_from_metadata",
-                requestOptions
-            );
-            const result = await response.json();
-
-            // const encodedTransaction = result.result.encoded_transaction;
-            // console.log(encodedTransaction);
-
-            const provider = getProvider(); // see "Detecting the Provider"
-            if (!provider) {
-                throw new Error("Provider not found");
-            }
-            try {
-                const resp = await provider.connect();
-                console.log(resp.publicKey.toString());
-            } catch (err) {
-                console.error("Provider connection error:", err);
-            }
-
-            const network = clusterApiUrl("devnet");
-            const connection = new Connection(network);
-
-            // Deserialize the transaction
-            const transaction = Transaction.from(
-                Buffer.from(result.result.encoded_transaction, "base64")
-            );
-
-            // // Sign the transaction
-            // const signedTransaction = await provider.signTransaction(transaction);
-
-            // const signature = await connection.sendRawTransaction(signedTransaction.serialize());
-
-            const { signature } = await provider.signAndSendTransaction(transaction);
-            await connection.getSignatureStatus(signature);
-
-            console.log("Transaction successful with signature:", signature);
-        } catch (error) {
-            console.log("lỗi err ");
-            console.error("Error:", error);
-        }
-    };
 
     // Placeholder for your provider detection logic
     const getProvider = () => {
