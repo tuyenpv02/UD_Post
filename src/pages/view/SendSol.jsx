@@ -82,15 +82,15 @@ const SendSol = ({ totalPoint,viewPublicKey }) => {
         window.open("https://phantom.app/", "_blank");
     };
 
-    const getMyBalance = useCallback(async () => {
-        if (!publicKey) return setBalance(0);
-        let lamports = await connection.getBalance(publicKey);
-        return setBalance(lamports/10**9);
-    }, [connection, publicKey]);
+    // const getMyBalance = useCallback(async () => {
+    //     if (!publicKey) return setBalance(0);
+    //     let lamports = await connection.getBalance(publicKey);
+    //     return setBalance(lamports/10**9);
+    // }, [connection, publicKey]);
 
-    useEffect(() => {
-        getMyBalance();
-    }, [getMyBalance]);
+    // useEffect(() => {
+    //     getMyBalance();
+    // }, [getMyBalance]);
     return (
         <div>
             <Button
@@ -113,12 +113,12 @@ const SendSol = ({ totalPoint,viewPublicKey }) => {
                 footer={false}
             >
                 <Space direction="vertical" size={"middle"} style={{ width: "100%" }}>
-                    <Row>
+                    {/* <Row>
                         <Col span={24}>
                             <Typography.Text>My balance:</Typography.Text>
                             <Typography.Text strong> {balance} </Typography.Text>
                         </Col>
-                    </Row>
+                    </Row> */}
                     <Row color="red">
                         <div className="alert alert-success w-100 mb-0" role="alert">
                             <Typography.Text>Giá trị quy đổi: </Typography.Text>
