@@ -99,7 +99,7 @@ function ButtonConnectWallet() {
             <WalletMultiButton
                 style={{ backgroundColor: "#fff", color: "#1f1f1f", fontSize: 20 }}
             />
-            <Button onClick={handleLog}>log</Button>
+            {/* <Button onClick={handleLog}>log</Button> */}
         </div>
     );
 }
