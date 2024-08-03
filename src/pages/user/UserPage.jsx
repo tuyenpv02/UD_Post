@@ -7,6 +7,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useNavigate, useParams } from "react-router-dom";
 import PostService from "./../../services/PostService";
 import ConvertPoint from "./Point";
+import TransactionUser from "./TransactionUser";
 
 const UserPage = () => {
     const navigate = useNavigate();
@@ -80,17 +81,10 @@ const UserPage = () => {
         fetchUser();
     }, []);
 
-    // console.log("post ", posts);
     return (
         <div>
-            {/* <button
-                onClick={() => {
-                    console.log(Util.User);
-                }}
-            >
-                log
-            </button> */}
             <Row gutter={[12, 5]}>
+                {/* begin profile */}
                 <Col span={24}>
                     <Card
                         style={{ height: "100%", width: "100%", padding: "30px" }}
@@ -142,7 +136,9 @@ const UserPage = () => {
                         </Row>
                     </Card>
                 </Col>
-                {/*  */}
+                {/* end profile */}
+
+                {/* begin list post  */}
                 <Col span={24}>
                     <Card title={"Danh sách bài đăng"} style={{ width: "100%", padding: "30px" }}>
                         {posts.length > 0 ? (
@@ -186,6 +182,13 @@ const UserPage = () => {
                         )}
                     </Card>
                 </Col>
+                 {/* end list post  */}
+
+                {/* begin list transaction */}
+                <Col span={24}>
+                    <TransactionUser />
+                </Col>
+                {/* end list transaction */}
             </Row>
 
             {/*  */}
