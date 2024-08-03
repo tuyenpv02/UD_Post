@@ -37,6 +37,8 @@ function PostList({ load, setLoad }) {
                 return res.json();
             })
             .then((data) => {
+                // sắp xếp theo createAt
+                data.sort((a, b) => new Date(b.createAt) - new Date(a.createAt));
                 setPosts([...data]);
             })
             .catch((err) => console.log(err));
@@ -60,6 +62,8 @@ function PostList({ load, setLoad }) {
                 // posts[index] = temp;
                 arr.push(temp);
             }
+            // Sắp xếp các bài đăng theo thời gian tạo
+
             setPosts([...arr]);
         };
 
@@ -125,51 +129,51 @@ function PostList({ load, setLoad }) {
     return (
         <>
             {/* <Card  title={"Tạo post"}> */}
-                <List
-                    itemLayout="vertical"
-                    size="large"
-                    pagination={{
-                        onChange: (page) => {
-                            console.log(page);
-                        },
-                        pageSize: 5,
-                    }}
-                    dataSource={posts}
-                    renderItem={(item) => (
-                        <List.Item
-                            key={item.title}
-                            actions={[
-                                // <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
-                                <IconText
-                                    icon={LikeOutlined}
-                                    text={item.totalLike}
-                                    key="list-vertical-like-o"
-                                />,
-                                // <IconText
-                                //     icon={MessageOutlined}
-                                //     text="2"
-                                //     key="list-vertical-message"
-                                // />,
-                            ]}
-                        >
-                            <List.Item.Meta
-                                // avatar={<Avatar src={item.avatar} />}
-                                title={
-                                    <a
+            <List
+                itemLayout="vertical"
+                size="large"
+                pagination={{
+                    onChange: (page) => {
+                        console.log(page);
+                    },
+                    pageSize: 5,
+                }}
+                dataSource={posts}
+                renderItem={(item) => (
+                    <List.Item
+                        key={item.title}
+                        actions={[
+                            // <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
+                            <IconText
+                                icon={LikeOutlined}
+                                text={item.totalLike}
+                                key="list-vertical-like-o"
+                            />,
+                            // <IconText
+                            //     icon={MessageOutlined}
+                            //     text="2"
+                            //     key="list-vertical-message"
+                            // />,
+                        ]}
+                    >
+                        <List.Item.Meta
+                            // avatar={<Avatar src={item.avatar} />}
+                            title={
+                                <a
                                     onClick={() => {
                                         navigate("/post/" + item.id);
                                     }}
                                 >
                                     {item.title}
                                 </a>
-                                }
-                                description={item.createAt}
-                            />
-                            {/* {item.content} */}
-                            {/* {item.createAt} */}
-                        </List.Item>
-                    )}
-                />
+                            }
+                            description={item.createAt}
+                        />
+                        {/* {item.content} */}
+                        {/* {item.createAt} */}
+                    </List.Item>
+                )}
+            />
             {/* </Card> */}
         </>
     );

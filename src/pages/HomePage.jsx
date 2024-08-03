@@ -132,7 +132,7 @@ const HomePage = () => {
                     <Content
                         style={{
                             // margin: "10px 8px",
-                            padding: 12,
+                            padding: 3,
                             minHeight: "100vh",
                             background: "#f0f2f5",
                         }}

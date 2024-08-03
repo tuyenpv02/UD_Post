@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Util from "../../util/Util";
 
-const SendSol = ({ totalPoint,viewPublicKey }) => {
+const SendSol = ({ totalPoint, viewPublicKey }) => {
     const { connected, publicKey, sendTransaction } = useWallet();
     const { connection } = useConnection();
     const [balance, setBalance] = useState(0);
@@ -16,6 +16,21 @@ const SendSol = ({ totalPoint,viewPublicKey }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const handleCancel = () => {
         setIsModalOpen(false);
+    };
+
+    // Kiểm tra và sử dụng Buffer
+    const Buffer = globalThis.Buffer;
+    const toTransaction = (endcodeTransaction) =>
+        Transaction.from(Uint8Array.from(atob(endcodeTransaction), (c) => c.charCodeAt(0)));
+    // Placeholder for your provider detection logic
+    const getProvider = () => {
+        if ("phantom" in window) {
+            const provider = window.phantom?.solana;
+            if (provider?.isPhantom) {
+                return provider;
+            }
+        }
+        window.open("https://phantom.app/", "_blank");
     };
 
     const sendSol = () => {
@@ -61,25 +76,35 @@ const SendSol = ({ totalPoint,viewPublicKey }) => {
                 const { signature } = await provider.signAndSendTransaction(transaction);
                 await connection.getSignatureStatus(signature);
 
-                toast.success("Gửi thành công");
-                console.log("Transaction successful with signature:", signature);
                 setIsModalOpen(false);
+                // toast.success("Gửi thành công");
+                console.log("Transaction successful with signature:", signature);
+                const transactionUrl = `https://translator.shyft.to/tx/${signature}?cluster=devnet`;
+                const transactionUr2 = `https://explorer.solana.com/tx/${signature}?cluster=devnet`;
+                Swal.fire({
+                    text: "Send thành công!",
+                    footer: '<span id="view-transaction" style="cursor: pointer; color: #3085d6;">View transaction</span>',
+                    icon: "success",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "View transaction",
+                    didOpen: () => {
+                        document.getElementById("view-transaction").onclick = () => {
+                            window.open(transactionUr2, "_blank"); // Mở link trong tab mới
+                            Swal.close(); // Đóng thông báo
+                        };
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.open(transactionUrl, "_blank"); // Mở link trong tab mới
+                        Swal.close();
+                    }
+                });
+
+                //
             })
             .catch((error) => console.log("error", error));
-    };
-    // Kiểm tra và sử dụng Buffer
-    const Buffer = globalThis.Buffer;
-    const toTransaction = (endcodeTransaction) =>
-        Transaction.from(Uint8Array.from(atob(endcodeTransaction), (c) => c.charCodeAt(0)));
-    // Placeholder for your provider detection logic
-    const getProvider = () => {
-        if ("phantom" in window) {
-            const provider = window.phantom?.solana;
-            if (provider?.isPhantom) {
-                return provider;
-            }
-        }
-        window.open("https://phantom.app/", "_blank");
     };
 
     // const getMyBalance = useCallback(async () => {
@@ -91,8 +116,43 @@ const SendSol = ({ totalPoint,viewPublicKey }) => {
     // useEffect(() => {
     //     getMyBalance();
     // }, [getMyBalance]);
+
+    const viewTransaction = () => {
+        const signature =
+            "5WqHAiA6zvfNVoNYtoFwbq44XreSBVgHHu2j3xU39tiQGwUpJt28uBHq9B6F7yTx5FcTkfneCtxYEN5t9UjrTjzL";
+        const transactionUrl = `https://translator.shyft.to/tx/${signature}?cluster=devnet`;
+        const transactionUr2 = `https://explorer.solana.com/tx/${signature}?cluster=devnet`;
+        Swal.fire({
+            // title: "Are you sure?",
+            text: "Send thành công!",
+            footer: '<span id="view-transaction" style="cursor: pointer; color: #3085d6;">View transaction</span>',
+            icon: "success",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "View transaction",
+            didOpen: () => {
+                document.getElementById("view-transaction").onclick = () => {
+                    window.open(transactionUr2, "_blank"); // Mở link trong tab mới
+                    Swal.close(); // Đóng thông báo
+                };
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.open(transactionUrl, "_blank"); // Mở link trong tab mới
+                Swal.close(); // Đóng thông báo
+            }
+        });
+    };
     return (
         <div>
+            {/* <Button
+                onClick={() => {
+                    viewTransaction();
+                }}
+            >
+                view tran
+            </Button> */}
             <Button
                 onClick={() => {
                     if (!Util.User) {
@@ -102,7 +162,7 @@ const SendSol = ({ totalPoint,viewPublicKey }) => {
                     setIsModalOpen(true);
                 }}
             >
-                Send
+                Tặng sol
             </Button>
 
             <Modal
