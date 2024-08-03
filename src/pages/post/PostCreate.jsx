@@ -63,8 +63,9 @@ const CreatePost = () => {
         // tạo new post
         PostService.add(post)
             .then((res) => {
-                console.log(res.data);
+                console.log('post create ',res.data);
                 toast.success("Tạo post thành công");
+
                 // lấy user => tạo post tăng 5 điểm
                 UserService.getById(res.data.userId).then((response) => {
                     // console.log(response.data);
@@ -72,6 +73,8 @@ const CreatePost = () => {
                         ...response.data,
                         point: response.data.point + 5,
                     };
+
+                    // tăng point trong user
                     UserService.update(user.id, user).then((res) => {
                         console.log('update point in user ',res);
                     });

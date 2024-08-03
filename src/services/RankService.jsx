@@ -17,7 +17,8 @@ class RankService {
             // Sort ranks by points in descending order
             ranks.sort((a, b) => b.totalPoint - a.totalPoint);
             // console.log('rn ',ranks);
-            return ranks;
+            // top 5 ranks
+            return ranks.slice(0, 5);
         } catch (error) {
             console.error("Error fetching and sorting ranks:", error);
             throw error;

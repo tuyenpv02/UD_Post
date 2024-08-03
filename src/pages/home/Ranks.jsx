@@ -1,39 +1,35 @@
-import { Avatar, List, Typography } from "antd";
+import { Avatar, Card, List, Typography } from "antd";
 import { useEffect, useState } from "react";
 import RankService from "./../../services/RankService";
 import { useNavigate } from "react-router-dom";
 
-const BodyRight = () => {
+const BodyRight = ({ load, setLoad }) => {
     const navigate = useNavigate();
     const [ranks, setRanks] = useState([]);
     const getALlRanks = async () => {
-        const res = await RankService.getRanks();
-        setRanks([...res.data]);
+        const res = await RankService.getRanksSortedByPoints();
+        console.log("ranks ", res);
+        setRanks([...res]);
     };
 
     useEffect(() => {
         getALlRanks();
-    }, []);
+    }, [load]);
     return (
         <>
             <List
-                style={{
-                    backgroundColor: "#ffffff", // Màu nền trắng
-                    borderRadius: "5px", // Bo viền
-                }}
+                style={
+                    {
+                        // backgroundColor: "#ffffff", // Màu nền trắng
+                        // borderRadius: "5px", // Bo viền
+                    }
+                }
                 header={<div>Hạng</div>}
                 bordered
                 itemLayout="horizontal"
                 dataSource={ranks}
                 renderItem={(item, index) => (
-                    <List.Item
-                        style={
-                            {
-                                // backgroundColor: "#ffffff", // Màu nền trắng
-                                // borderRadius: "10px", // Bo viền
-                            }
-                        }
-                    >
+                    <List.Item>
                         <List.Item.Meta
                             avatar={<Typography.Title level={4}>0{index + 1}</Typography.Title>}
                             title={

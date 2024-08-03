@@ -137,7 +137,7 @@ const UserPage = () => {
                             </Col>
                             <Col span={14}>
                                 {/* đổi poitn  */}
-                                <ConvertPoint totalPoint={userLogin?.point} />
+                                {/* <ConvertPoint totalPoint={userLogin?.point} /> */}
                             </Col>
                         </Row>
                     </Card>

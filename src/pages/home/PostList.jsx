@@ -1,20 +1,36 @@
-import { useEffect, useState } from "react";
-import { Badge, Button, Card, Col, Flex, Image, Row, Space, Typography } from "antd";
-import { LikeOutlined, StarFilled } from "@ant-design/icons";
-import { Link, useNavigate } from "react-router-dom";
-import Util from "../../util/Util";
-import InteractPostService from "../../services/InteractPostService";
+import React, { useEffect, useState } from "react";
+import { LikeOutlined, MessageOutlined, StarOutlined } from "@ant-design/icons";
+import { Avatar, Card, List, Space } from "antd";
 import { toast } from "react-toastify";
-import getDateNow from "../../util/GetDateNow";
-import UserService from "../../services/UserService";
-import { useWallet } from "@solana/wallet-adapter-react";
 import RankService from "../../services/RankService";
-
-function BodyLeft({load, setLoad}) {
+import UserService from "../../services/UserService";
+import InteractPostService from "../../services/InteractPostService";
+import Util from "../../util/Util";
+import getDateNow from "../../util/GetDateNow";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useNavigate } from "react-router-dom";
+const data = Array.from({
+    length: 23,
+}).map((_, i) => ({
+    href: "https://ant.design",
+    title: `ant design part ${i}`,
+    avatar: `https://api.dicebear.com/7.x/miniavs/svg?seed=${i}`,
+    description:
+        "Ant Design, a design language for background applications, is refined by Ant UED Team.",
+    content:
+        "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
+}));
+const IconText = ({ icon, text }) => (
+    <Space>
+        {React.createElement(icon)}
+        {text}
+    </Space>
+);
+function PostList({ load, setLoad }) {
     const navigate = useNavigate();
     const { publicKey } = useWallet();
     const [posts, setPosts] = useState([]);
-    
+
     const fetchPosts = async () => {
         fetch("http://localhost:3000/posts")
             .then((res) => {
@@ -91,7 +107,7 @@ function BodyLeft({load, setLoad}) {
                                 // tăng total point trong rank + 5
                                 RankService.updateTotalPoint(user.id, 1).then((saveRank) => {
                                     console.log("update rank totalPoint ", saveRank);
-                                    setLoad(!load)
+                                    setLoad(!load);
                                 });
                             });
                         })
@@ -106,64 +122,57 @@ function BodyLeft({load, setLoad}) {
                 return;
             });
     };
-
     return (
         <>
-            <div className="row row-cols-1 row-cols-md-3 g-3">
-                {posts?.map((element, idx) => (
-                    <div className="col" key={idx}>
-                        <div
-                            className="card h-100"
-                            style={{ maxHeight: "600px", display: "flex", flexDirection: "column" }}
+            {/* <Card  title={"Tạo post"}> */}
+                <List
+                    itemLayout="vertical"
+                    size="large"
+                    pagination={{
+                        onChange: (page) => {
+                            console.log(page);
+                        },
+                        pageSize: 5,
+                    }}
+                    dataSource={posts}
+                    renderItem={(item) => (
+                        <List.Item
+                            key={item.title}
+                            actions={[
+                                // <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
+                                <IconText
+                                    icon={LikeOutlined}
+                                    text={item.totalLike}
+                                    key="list-vertical-like-o"
+                                />,
+                                // <IconText
+                                //     icon={MessageOutlined}
+                                //     text="2"
+                                //     key="list-vertical-message"
+                                // />,
+                            ]}
                         >
-                            <div className="card-body" style={{ flex: 1 }}>
-                                <h5
-                                    className="card-title"
+                            <List.Item.Meta
+                                // avatar={<Avatar src={item.avatar} />}
+                                title={
+                                    <a
                                     onClick={() => {
-                                        navigate("/post/" + element.id);
+                                        navigate("/post/" + item.id);
                                     }}
                                 >
-                                    {element.title}
-                                </h5>
-                                <p
-                                    className="card-text"
-                                    style={{
-                                        color: "#7f858d",
-                                        fontSize: 18,
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
-                                        display: "-webkit-box",
-                                        WebkitBoxOrient: "vertical",
-                                        WebkitLineClamp: 5 /* Số dòng muốn hiển thị */,
-                                    }}
-                                >
-                                    {element.content}
-                                </p>
-                            </div>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    marginTop: "auto",
-                                }}
-                            >
-                                <Badge color="blue" count={element.totalLike}>
-                                    <Button
-                                        onClick={() => {
-                                            likePost(element);
-                                        }}
-                                        size="large"
-                                        type="text"
-                                        icon={<LikeOutlined />}
-                                    ></Button>
-                                </Badge>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
+                                    {item.title}
+                                </a>
+                                }
+                                description={item.createAt}
+                            />
+                            {/* {item.content} */}
+                            {/* {item.createAt} */}
+                        </List.Item>
+                    )}
+                />
+            {/* </Card> */}
         </>
     );
 }
 
-export default BodyLeft;
+export default PostList;
